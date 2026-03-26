@@ -14,7 +14,11 @@ const connectDB = async () => {
     console.log('MongoDB Connected Successfully 🚀');
   } catch (error) {
     console.error('MongoDB Connection Error:', error);
-    process.exit(1);
+    if (process.env.ADMIN_BYPASS === 'true') {
+      console.log('⚠️ Running in ADMIN_BYPASS mode without database 🛡️');
+    } else {
+      process.exit(1);
+    }
   }
 };
 

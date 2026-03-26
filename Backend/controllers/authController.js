@@ -47,6 +47,17 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Development Bypass Login
+    if (process.env.ADMIN_BYPASS === 'true' && (email === 'admin@digitalheros.com' || email === 'admin@hero.com')) {
+      return res.json({
+        _id: 'bypass-id',
+        full_name: 'Bypass Admin',
+        email: email,
+        role: 'admin',
+        token: 'bypass-token'
+      });
+    }
+
     const user = await User.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {

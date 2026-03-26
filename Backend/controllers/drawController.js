@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Draw from '../models/Draw.js';
 import Score from '../models/Score.js';
 import User from '../models/User.js';
@@ -40,6 +41,17 @@ export const executeDraw = async (req, res) => {
     // Total Prize Pool calculation (Mocked logic)
     let totalPoolAmount = 1000.00;
     
+    // Handle ADMIN_BYPASS without database
+    if (process.env.ADMIN_BYPASS === 'true' && mongoose.connection.readyState !== 1) {
+      return res.json({
+        message: 'Draw executed in BYPASS MODE (Bypassing Database)',
+        draw_id: 'bypass-draw-id-' + Date.now(),
+        winningSequence: generateRandomSequence(),
+        jackpotRollover: 1000.00,
+        winners_count: { '5-match': 0, '4-match': 1, '3-match': 5 }
+      });
+    }
+
     // Check for previous rollover
     const lastDraw = await Draw.findOne().sort({ createdAt: -1 });
 
@@ -136,6 +148,18 @@ export const executeDraw = async (req, res) => {
 
 export const getDrawHistory = async (req, res) => {
   try {
+    if (process.env.ADMIN_BYPASS === 'true' && mongoose.connection.readyState !== 1) {
+      return res.json([{
+        _id: 'bypass-draw-1',
+        month_year: new Date(),
+        status: 'published',
+        logic_used: 'random',
+        total_pool_amount: 1000,
+        jackpot_rollover_amount: 0,
+        winning_sequence: [1, 2, 3, 4, 5],
+        createdAt: new Date()
+      }]);
+    }
     const draws = await Draw.find().sort({ createdAt: -1 });
     res.json(draws);
   } catch (error) {
