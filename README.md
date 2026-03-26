@@ -2,12 +2,7 @@
 
 DigitalHeros is a premium full-stack platform that combines charitable giving with an engaging monthly lucky draw system. Our mission is to support global charities through a community-driven subscription model.
 
-## 🔗 Live Deployments
-- **Main Application**: [Vercel Deployment](https://golf-charity-system.vercel.app)
-- **Admin Dashboard**: [Access Admin Panel](https://golf-charity-system.vercel.app/admin)
-- **API Health Check**: [Render Status](https://golf-charity-system-zr0t.onrender.com/api/health)
-
----
+## 🔗 Live Deployments  [Vercel Deployment](https://golf-charity-system-self.vercel.app/dashboard)
 
 ## 🧭 How It Works (Core Logic)
 
@@ -39,9 +34,9 @@ Prizes are distributed based on matches:
 ## 🛡️ Development & Bypass Mode
 The project is currently configured with `ADMIN_BYPASS=true` to allow for immediate evaluation and demonstration.
 
-### 🔑 Bypass Login
+### 🔑  Login
 - **Email**: `admin@digitalheros.com`
-- **Password**: `any_password`
+- **Password**: `Admin@123`
 
 ---
 
@@ -56,7 +51,7 @@ The project is currently configured with `ADMIN_BYPASS=true` to allow for immedi
 │   ├── controllers/   # App Logic (Draws, Auth, etc.)
 │   ├── models/        # MongoDB Data Schemas
 │   └── index.js       # App Entry Point
-├── Frontend/          # React SPA
+├── Frontend/          # React 
 │   ├── src/pages/     # Admin & User Interfaces
 │   └── src/services/  # API Interceptors
 ```
