@@ -31,6 +31,11 @@ app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/stripe", stripeRoutes);
 app.use("/api/draws", drawRoutes);
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'Healthy', timestamp: new Date() });
+});
+
 // Test Route
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
