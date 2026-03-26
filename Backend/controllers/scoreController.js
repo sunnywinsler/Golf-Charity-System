@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Score from '../models/Score.js';
 
 export const addScore = async (req, res) => {
@@ -7,6 +8,14 @@ export const addScore = async (req, res) => {
 
     if (!value || value < 1 || value > 45) {
       return res.status(400).json({ message: "Score must be between 1 and 45" });
+    }
+
+    // Handle ADMIN_BYPASS without database
+    if (process.env.ADMIN_BYPASS === 'true' && mongoose.connection.readyState !== 1) {
+      return res.json([{ 
+        value, 
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
+      }]);
     }
 
     // Insert new score
@@ -40,6 +49,14 @@ export const addScore = async (req, res) => {
 export const getScores = async (req, res) => {
   try {
     const userId = req.user._id;
+
+    // Handle ADMIN_BYPASS without database
+    if (process.env.ADMIN_BYPASS === 'true' && mongoose.connection.readyState !== 1) {
+      return res.json([{ 
+        value: 10, 
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) 
+      }]);
+    }
 
     const scores = await Score.find({ user_id: userId })
       .sort({ played_at: -1 })

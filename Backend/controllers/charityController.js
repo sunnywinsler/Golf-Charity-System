@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Charity from '../models/Charity.js';
 import User from '../models/User.js';
 
@@ -8,6 +9,11 @@ export const setCharity = async (req, res) => {
 
     if (!name) {
       return res.status(400).json({ message: "Charity name required" });
+    }
+
+    // Handle ADMIN_BYPASS without database
+    if (process.env.ADMIN_BYPASS === 'true' && mongoose.connection.readyState !== 1) {
+      return res.json({ charity: name });
     }
 
     // Find charity ID by name matching using regex for ilike equivalent
@@ -29,6 +35,11 @@ export const setCharity = async (req, res) => {
 export const getCharity = async (req, res) => {
   try {
     const userId = req.user._id;
+
+    // Handle ADMIN_BYPASS without database
+    if (process.env.ADMIN_BYPASS === 'true' && mongoose.connection.readyState !== 1) {
+      return res.json({ charity: "Kids Global" });
+    }
 
     const user = await User.findById(userId).populate('selected_charity_id');
 

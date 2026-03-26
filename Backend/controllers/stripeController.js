@@ -10,6 +10,14 @@ export const createCheckoutSession = async (req, res) => {
     const { plan } = req.body;
     const userId = req.user._id.toString(); 
 
+    // Handle ADMIN_BYPASS without database
+    if (process.env.ADMIN_BYPASS === 'true' && mongoose.connection.readyState !== 1) {
+      return res.json({ 
+        id: 'bypass-session-id', 
+        url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard` 
+      });
+    }
+
     if (!plan || !['monthly', 'yearly'].includes(plan.toLowerCase())) {
       return res.status(400).json({ message: "Valid plan required (Monthly or Yearly)" });
     }
